@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', ['uses' => 'TestController@root']);
+#Route::get('/', ['uses' => 'TestController@root']);
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin_auth', 'namespace' => 'Admin'], function () {
 
@@ -59,9 +59,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin_auth', 'namespace' => 
     Route::get('gatemanager/{id}/delete', ['as' => 'admin.deleteGateManager', 'uses' => 'GateManagerController@deleteGateManager']);
     Route::post('gatemanager/{id}', ['as' => 'admin.saveGateManager', 'uses' => 'GateManagerController@saveGateManager']);
 
+});
 
+Route::group(['prefix' => 'api', 'middleware' => 'controller_auth', 'namespace' => 'Api'], function () {
 
+    Route::get('gatemanager', ['as' => 'api.getManagerStatus', 'uses' => 'GateManagerApiController@getStatus']);
+    Route::post('gatemanager/event', ['as' => 'api.postManagerStatus', 'uses' => 'GateManagerApiController@postEvent']);
 
-
+    Route::get('gate/{gate}', ['as' => 'api.getGateStatus', 'uses' => 'GateApiController@getStatus']);
+    Route::get('gate/{gate}/authenticate', ['as' => 'api.authenticateToken', 'uses' => 'GateApiController@authenticate']);
+    Route::post('gate/{gate}/event', ['as' => 'api.postGateStatus', 'uses' => 'GateApiController@postEvent']);
 
 });
+

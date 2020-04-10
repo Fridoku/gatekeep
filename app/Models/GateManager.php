@@ -13,6 +13,9 @@ class GateManager extends Model
         'mac' => NULL
     ];
 
+    #Attributes for JSON Serialization
+    protected $visible = ['name', 'notes', 'enabled', 'gates'];
+
     #Return Gates that belong to this Gate Manager
     public function gates() {
         return $this->hasMany('\App\Models\Gate');

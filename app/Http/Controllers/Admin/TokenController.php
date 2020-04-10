@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller as Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 
 use App\Models\User;
 use App\Models\Token;
+use Exception;
+use PDOException;
 
 class TokenController extends Controller
 {
@@ -107,14 +110,20 @@ class TokenController extends Controller
 
 
         #Save Token Identification
-        if( !$this->request->filled('token_id') || $this->request->input('token_hash') == "••••" ) {
-            if( empty($this->token->hash) ) $this->errors[] = 'Please set an Identifier for this Token!';
+        if( !$this->request->filled('token_id') || $this->request->input('token_id') == "••••" ) {
+            if( empty($this->token->token_hash) ) $this->errors[] = 'Please set an Identifier for this Token!';
         }
         else {
-            if( password_verify( $this->request->input('token_id'), $this->token->token_hash) ) {
+
+            $hash = hash("SHA256", $this->request->input('token_id'));
+
+            if( $hash == $this->token->token_hash ) {
                $this->warnings[] = 'Identifier was not changed';
             }
-            else $this->token->token_hash = password_hash($this->request->input('token_id'), PASSWORD_DEFAULT);
+            elseif ( Token::where('token_hash', $hash)->count() == 0)  {
+                $this->token->token_hash = $hash;
+            }
+            else $this->errors[] = 'Token with this Identifier already exists!';
         }
 
         #Disable/Enable Token

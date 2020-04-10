@@ -12,6 +12,9 @@ class Gate extends Model
         'enabled' => true,
     ];
 
+    #Attributes for JSON Serialization
+    protected $visible = ['name', 'nice_name', 'notes', 'enabled', 'gateManager'];
+
     #List Users that can access this Gate
     public function users() {
         return $this->belongsToMany('App\Models\User', 'user_access_rights');

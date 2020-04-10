@@ -19,11 +19,11 @@ class ControllerAuth
     {
         if ( $request->filled('api_key'))
         {
-            $gateManager = GateManager::where('api_key', $request->input('api_key'));
+            $gateManager = GateManager::where('api_key', $request->input('api_key'))->firstOrFail();
 
             if($gateManager !== NULL)
             {
-                if ($gateManager->disabled)
+                if (!$gateManager->enabled)
                 {
                     return response('Access disabled', 403);
                 }

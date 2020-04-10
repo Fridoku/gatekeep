@@ -15,6 +15,9 @@ class User extends Model
         'enabled' => true,
     ];
 
+    #Attributes for JSON Serialization
+    protected $visible = ['username', 'first_name', 'last_name', 'enabled'];
+
     #Returns Collection of Gates the User can access
     public function gates() {
         return $this->belongsToMany('App\Models\Gate', 'user_access_rights');

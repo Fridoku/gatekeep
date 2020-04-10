@@ -32,7 +32,7 @@ class CreateBase extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->char('name', 50)->nullable(true);
-            $table->char('token_hash', 100);
+            $table->char('token_hash', 100)->unique();
             $table->boolean('enabled');
             $table->timestamps();
 
